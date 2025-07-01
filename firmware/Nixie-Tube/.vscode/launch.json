@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceFolder}/build/Nixie-Tube.elf",
+            "name": "Debug with OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                        "interface/stlink-v2-1.cfg",
+                        "target/stm32f1x.cfg"
+                    ],
+            "searchDir": ["C:/Development_Toolchains/xpack-openocd-0.12.0-6/openocd/scripts"],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw",// 启用详细日志
+            "device": "STM32F103C8"          // 指定具体芯片型号
+        }
+    ]
+}
