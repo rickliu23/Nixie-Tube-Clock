@@ -100,7 +100,7 @@ extern "C" {
 
 #if defined (STM32F100xB) || defined (STM32F100xE) || defined (STM32F105xC) || defined (STM32F107xC)
 /* For STM32F10x connectivity line devices and STM32F100x devices: TIM3 */
-#define DAC_TRIGGER_T3_TRGO                ((uint3r2_t)                                   DAC_CR_TSEL1_0 | DAC_CR_TEN1)  /*!< TIM3 TRGO selected as external conversion trigger for DAC channel */
+#define DAC_TRIGGER_T3_TRGO                ((uint32_t)                                   DAC_CR_TSEL1_0 | DAC_CR_TEN1)  /*!< TIM3 TRGO selected as external conversion trigger for DAC channel */
 #endif /* STM32F100xB || STM32F100xE || STM32F105xC || STM32F107xC */
 
 /* Availability of trigger from TIM5 and TIM15:                               */
