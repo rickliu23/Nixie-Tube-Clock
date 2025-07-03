@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "hal_port.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,16 +94,29 @@ int main(void)
 
   uint8_t array[] = "Hello, STM32!\r\n";
   HAL_UART_Transmit(&huart1, array, sizeof(array), 1000);
-
+  
   /* USER CODE END 2 */
+
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  //hal_HV_Enable();
+  hal_Time_Dsiable();
+  HAL_Delay(1000);
+
+  hal_Time_Output(12, 23);
+
+  int i = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    
+    HAL_Delay(1000);
+
+    hal_DOT_CTRL_Trigger();
   }
   /* USER CODE END 3 */
 }
