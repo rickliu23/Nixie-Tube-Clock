@@ -108,3 +108,36 @@ void hal_Time_Output(char hours, char minutes)
     HAL_Delay(1);
     hal_STCP_Set();
 }
+
+
+
+#define TIME_GAP   (45)  // ms
+static int timeout = TIME_GAP;
+static char index = 9;
+
+void hal_Time_Loop(int time_ms)
+{
+    if (timeout > 0)
+    {
+        timeout-=time_ms;
+    }
+    else
+    {
+        index--;
+        timeout = TIME_GAP;
+    }
+
+    index %= 10;
+
+    unsigned char Ctrl = 0;
+    Ctrl = NumArray[index] << 4 | NumArray[index];
+
+    hal_STCP_Reset();
+    HAL_Delay(1);
+    
+    HAL_SPI_Transmit(&hspi1, &Ctrl, 1, 50);
+    HAL_SPI_Transmit(&hspi1, &Ctrl, 1, 50);
+    
+    HAL_Delay(1);
+    hal_STCP_Set();
+}

@@ -14,6 +14,7 @@ void hal_DOT_CTRL_Trigger(void);
 
 void hal_Time_Dsiable(void);
 void hal_Time_Output(char hours, char minutes);
+void hal_Time_Loop(int time_ms);
 
 #ifdef __cplusplus
 }

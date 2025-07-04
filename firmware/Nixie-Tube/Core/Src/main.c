@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "rtc.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -51,6 +52,15 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+
+RTC_TimeTypeDef sTime = {0};
+
+void GetTime(void)
+{
+  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+}
+
+int isTriggered = 0;
 
 /* USER CODE END PFP */
 
@@ -90,13 +100,13 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_SPI1_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
   uint8_t array[] = "Hello, STM32!\r\n";
   HAL_UART_Transmit(&huart1, array, sizeof(array), 1000);
   
   /* USER CODE END 2 */
-
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -105,18 +115,29 @@ int main(void)
   hal_Time_Dsiable();
   HAL_Delay(1000);
 
-  hal_Time_Output(12, 23);
+ // hal_Time_Output(19, 28);
 
-  int i = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    
-    HAL_Delay(1000);
 
-    hal_DOT_CTRL_Trigger();
+    #define TIME_EXEC_GAP (5)
+
+    HAL_Delay(TIME_EXEC_GAP);
+    GetTime();
+
+    if (isTriggered)
+    {
+      hal_Time_Loop(TIME_EXEC_GAP);
+    }
+    else
+    {
+      hal_Time_Output(sTime.Hours, sTime.Minutes);
+    }
+
+    //hal_DOT_CTRL_Trigger();
   }
   /* USER CODE END 3 */
 }
@@ -129,11 +150,13 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -154,6 +177,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
