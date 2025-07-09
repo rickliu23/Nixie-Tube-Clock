@@ -60,9 +60,8 @@
 #include "hal_port.h"
 static int tickCount_ms = 0;
 
-
 extern RTC_TimeTypeDef sTime;
-extern int isTriggered;
+
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -189,15 +188,6 @@ void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
   
-  if (sTime.Seconds >= 0 && sTime.Seconds < 2)
-  {
-    isTriggered = 1;
-  }
-  else
-  {
-    isTriggered = 0;
-  }
-
   tickCount_ms += 1;
   if (tickCount_ms >= 1000) // 1 second
   {

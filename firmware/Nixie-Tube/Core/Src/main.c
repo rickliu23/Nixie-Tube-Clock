@@ -54,13 +54,19 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
 RTC_TimeTypeDef sTime = {0};
+uint8_t lastMinute = 0;
+uint8_t isTriggered = 0;
 
 void GetTime(void)
 {
   HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-}
 
-int isTriggered = 0;
+  if (sTime.Minutes != lastMinute)
+  {
+    lastMinute = sTime.Minutes;
+    isTriggered = 1;
+  }
+}
 
 /* USER CODE END PFP */
 
@@ -131,6 +137,7 @@ int main(void)
     if (isTriggered)
     {
       hal_Time_Loop(TIME_EXEC_GAP);
+      isTriggered = 0;
     }
     else
     {
