@@ -52,22 +52,28 @@ void MX_RTC_Init(void)
   }
 
   /* USER CODE BEGIN Check_RTC_BKUP */
-
+  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+  if (sTime.Hours != 0 ||
+    sTime.Minutes != 0 ||
+    sTime.Seconds != 0)
+    {
+      return;
+    }
   /* USER CODE END Check_RTC_BKUP */
 
   /** Initialize RTC and set the Time and Date
   */
-  sTime.Hours = 22;
-  sTime.Minutes = 55;
+  sTime.Hours = 21;
+  sTime.Minutes = 59;
   sTime.Seconds = 0;
 
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
   {
     Error_Handler();
   }
-  DateToUpdate.WeekDay = RTC_WEEKDAY_FRIDAY;
+  DateToUpdate.WeekDay = RTC_WEEKDAY_WEDNESDAY;
   DateToUpdate.Month = RTC_MONTH_JULY;
-  DateToUpdate.Date = 4;
+  DateToUpdate.Date = 9;
   DateToUpdate.Year = 25;
 
   if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BIN) != HAL_OK)
